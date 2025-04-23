@@ -1,0 +1,34 @@
+.loadingSpinnerContainer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 5000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loadingAnt {
+    width: 64px; 
+    animation: moveAnt 6s ease-in-out infinite;
+    position: absolute;
+	left: 45%
+}
+
+@keyframes moveAnt {
+    0%, 1% {
+        transform: translateX(0) scaleX(-1);  
+    }
+    25%, 50% {
+        transform: translateX(100px) scaleX(-1);  
+    }
+    50% {
+        transform: translateX(100px) scaleX(1); 
+    }
+    75%, 100% {
+        transform: translateX(0) scaleX(1);  
+    }
+}
