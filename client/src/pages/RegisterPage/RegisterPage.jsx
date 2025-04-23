@@ -3,7 +3,7 @@ import "./RegisterPage.css";
 import { AiOutlineClose } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { register, reset } from "../../features/auth/authSlice";
+import { register as registerUser, reset } from "../../features/auth/authSlice";
 import { Spinner } from "../../components";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -29,7 +29,7 @@ export const RegisterPage = ({ setIsOpenRegisterForm }) => {
 
   const onSubmit = async (data) => {
     data.role = "Học viên"; // Role mặc định
-    const response = await dispatch(register(data));
+    const response = await dispatch(registerUser(data));
     if (response.type.endsWith("fulfilled")) {
       toast.success("Account registered successfully!");
       navigate("/login");
