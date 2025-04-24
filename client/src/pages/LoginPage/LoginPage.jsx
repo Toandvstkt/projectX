@@ -71,7 +71,7 @@ export const LoginPage = ({ isOpenLoginForm, setIsOpenLoginForm }) => {
         // Hiển thị popup login trên PC
         <div className="popup active">
           <div className="overlay"></div>
-          <div className="content w-[90%] sm:w-[100%] md:w-[50%] login-container md:m-auto rounded-xl">
+          <div className="content w-[90%] md:w-[50%] login-container md:m-auto rounded-xl">
             <form onSubmit={handleSubmit(onSubmit)}>
               <AiOutlineClose
                 className="absolute text-sm hover:cursor-pointer"
@@ -115,7 +115,7 @@ export const LoginPage = ({ isOpenLoginForm, setIsOpenLoginForm }) => {
       ) : (
         // Hiển thị form login trên màn hình nhỏ
         <div className="login-page-container flex justify-center items-center bg-primary min-h-screen">
-          <div className="w-[90%] sm:w-[100%] login-containe">
+          <div className="w-[90%] login-containe">
           <div className="text-center mb-4 w-[90vw] ">
             <img src="/image/logo.svg" alt="Project X Logo" className="mx-auto w-full h-auto" />
             <p className="text-gray-500 mb-[10vh] text-2xl text-white">take tests your way</p>

@@ -32,7 +32,7 @@ const AppContent = () => {
 			<div className="content-container select-none">
 				<Routes>
 					<Route path="/" element={<Layout />}>
-						<Route path="/" element={<HomePage />} />
+						<Route path="/" element={<LoginPage />} />
 						<Route path="/home" element={<HomePage />} />
 						<Route path="/register" element={<RegisterPage />} />
 						<Route path="/login" element={<LoginPage />} />
