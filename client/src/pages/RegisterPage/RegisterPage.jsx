@@ -52,10 +52,10 @@ export const RegisterPage = ({ setIsOpenRegisterForm }) => {
       <div className="register-container flex justify-center items-center bg-primary min-h-screen">
         <div className="w-[90%] login-containe">
         <div className="text-center mb-4">
-          <img src="/image/logo.svg" alt="Project X Logo" className="mx-auto w-[70%] h-auto" />
+          <img src="/image/logo.svg" alt="Project X Logo" className="mx-auto w-full md:w-[70%] h-auto" />
           <p className="text-gray-500 mb-[10vh] text-2xl text-white">take tests your way</p>
         </div>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(onSubmit)} className="mx-auto w-full md:w-[70%]">
             <div className="mb-3 mt-5">
               <p className="text-3xl text-white text-center">Full name</p>
               <input type="text" className="rounded-md p-1 my-1 h-[7vh] text-lg focus:outline-none w-full" 
