@@ -1,14 +1,19 @@
-# Giới thiệu về Antidee
+# Giới thiệu về ProjectX
 ## Ý nghĩa tên gọi
-Tên Antidee của dự án chúng tôi hợp thành từ 2 từ đơn là Ant có nghĩa là con kiến, tidee là cách điệu của tidy mang nghĩa là sự ngăn nắp, tổng hợp lại thì tên dự án của chúng tôi tượng trưng cho 1 hệ sinh thái hoàn chỉnh, đoàn kết và chăm chỉ như kiến, tận tâm trong công việc, mang lại sự gọn gàng ngăn nắp cho khách hàng. Hướng tới việc tạo ra môi trường kết nối giữa khách hàng và người giúp việc, nơi mà cả 2 bên đều thấy an tâm và hài lòng khi sử dụng dịch vụ.
-
-## Lý do chọn đề tài
-Trong thế giới phát triển nhanh chóng ngày nay, nhu cầu về người giúp việc gia đình có tay nghề và đáng tin cậy đang tăng lên nhanh chóng. Tuy nhiên, việc tìm kiếm sự trợ giúp đáng tin cậy và có năng lực vẫn là một thách thức lớn đối với nhiều hộ gia đình. Đây là nơi Antidee bước vào, đưa ra giải pháp độc đáo bằng cách kết nối chủ nhà với những người giúp việc gia đình có trình độ thông qua nền tảng trực tuyến dễ sử dụng.
+Tên ProjectX mang ý nghĩa như một dự án bí ẩn và đầy tiềm năng — "X" tượng trưng cho sự khám phá, đổi mới và những khả năng không giới hạn. Chúng tôi mong muốn ProjectX sẽ trở thành một công cụ đột phá, hỗ trợ việc học tập trở nên nhanh hơn, hiệu quả hơn và thông minh hơn, mở ra tương lai mới cho cách thức kiểm tra và đánh giá học viên.
 
 ## Mục tiêu
-Antidee hướng tới trở thành nền tảng hàng đầu và đáng tin cậy trong lĩnh vực cung cấp dịch vụ giúp việc tại nhà và đăng ký người giúp việc. Chúng tôi mong muốn tạo ra môi trường kết nối và giao dịch minh bạch, an toàn và chuyên nghiệp, mang đến sự hài lòng cao nhất cho khách hàng thông qua dịch vụ chất lượng, quy trình tuyển chọn nghiêm ngặt và hỗ trợ tận tình. Antidee không chỉ cung cấp dịch vụ giúp việc mà còn xây dựng niềm tin và sự hài lòng lâu dài giữa khách hàng và người giúp việc.
+ProjectX được xây dựng với mục tiêu giúp rút ngắn thời gian làm bài kiểm tra cũng như thời gian chấm bài cho các học viên của trung tâm tiếng anhanh và nhiều người dùng khác.
+- Chúng tôi hướng tới việc:
 
-Ngoài ra mục tiêu của chúng tôi còn là nâng cao chất lượng và độ tin cậy của dịch vụ, Antidee sẽ cung cấp các khóa đào tạo chuyên biệt cho người giúp việc gia đình. Chỉ những người hoàn thành các khóa học này và đạt được chứng chỉ mới có thể được liệt kê trên nền tảng của chúng tôi. Điều này đảm bảo rằng tất cả người lao động đều có những kỹ năng và kiến ​​thức cần thiết để thực hiện nhiệm vụ của mình một cách hiệu quả và đạt tiêu chuẩn cao. Và nền tảng của chúng tôi mong muốn sẽ cung cấp giải pháp toàn diện cho các hộ gia đình đang tìm kiếm người giúp việc gia đình đáng tin cậy bằng cách cung cấp đội ngũ nhân viên đa dạng và đã được kiểm duyệt, đảm bảo dịch vụ an toàn và chất lượng.
+    + Tạo ra hệ thống kiểm tra trực tuyến dễ sử dụng, thân thiện với cả giáo viên và học viên.
 
-Antidee không chỉ là nơi thuê người giúp việc gia đình. Ngoài dịch vụ tuyển dụng, mục tiêu của Antidee là thúc đẩy xây dựng một diễn đàn tương tự như Facebook, nơi người giúp việc và chủ nhà có thể giao tiếp, chia sẻ kinh nghiệm, trao đổi thủ thuật và xây dựng một cộng đồng hỗ trợ. Diễn đàn này thúc đẩy cảm giác thân thuộc và hỗ trợ lẫn nhau giữa những người dùng, nâng cao trải nghiệm tổng thể.
+    + Tự động hóa quá trình chấm điểm, giúp giáo viên tiết kiệm thời gian, công sức, giảm thiểu sai sót trong việc đánh giá.
 
+    + Cung cấp các công cụ hỗ trợ phân tích kết quả học tập, từ đó giúp học viên nhận ra điểm mạnh, điểm yếu và cải thiện hiệu suất học tập.
+
+    + Đảm bảo tính minh bạch, công bằng và bảo mật trong toàn bộ quá trình kiểm tra và chấm điểm.
+
+    + Hướng tới tương lai, ProjectX sẽ phát triển thêm nhiều tính năng mở rộng như tạo đề thi tự động, học tập thích ứng và gợi ý nội dung ôn tập cá nhân hóa cho từng học viên.
+
+    + Với ProjectX, chúng tôi không chỉ đơn giản là tạo ra một công cụ kiểm tra, mà còn muốn xây dựng một nền tảng hỗ trợ giáo dục thông minh, tiết kiệm thời gian và gia tăng giá trị học tập.
