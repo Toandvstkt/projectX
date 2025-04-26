@@ -1,0 +1,125 @@
+.list-exam-container {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #FFB0D9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  .exam-header {
+    width: 100%;
+    background-color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .exam-header h1 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  .exam-content {
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .project-info {
+    width: 100%;
+    background-color: #FFB0D9;
+    border-radius: 5px 5px 0 0;
+    padding: 20px;
+    text-align: center;
+    color: white;
+  }
+  
+  .project-info h2 {
+    font-size: 24px;
+    margin: 0;
+    font-weight: bold;
+  }
+  
+  .x-mark {
+    position: relative;
+    top: -5px;
+    font-size: 18px;
+  }
+  
+  .tagline {
+    font-size: 14px;
+    margin: 5px 0 15px;
+  }
+  
+  .student-info {
+    margin-top: 10px;
+  }
+  
+  .class-info, .student-name {
+    margin: 5px 0;
+    font-size: 14px;
+  }
+  
+  .tests-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .test-button {
+    width: 100%;
+    padding: 15px;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    color: #ff3366;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .test-button:hover {
+    background-color: #f8f8f8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .back-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: transparent;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .back-button:hover {
+    color: #555;
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 480px) {
+    .exam-content {
+      padding: 10px;
+    }
+    
+    .project-info {
+      padding: 15px;
+    }
+    
+    .test-button {
+      padding: 12px;
+    }
+  }
