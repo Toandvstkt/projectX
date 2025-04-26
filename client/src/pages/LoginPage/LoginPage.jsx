@@ -67,57 +67,10 @@ export const LoginPage = ({ isOpenLoginForm, setIsOpenLoginForm }) => {
 
   return (
     <>
-      {isPC ? (
-        // Hiển thị popup login trên PC
-        <div className="popup active">
-          <div className="overlay"></div>
-          <div className="content w-[90%] md:w-[50%] login-container md:m-auto rounded-xl">
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <AiOutlineClose
-                className="absolute text-sm hover:cursor-pointer"
-                onClick={() => setIsOpenLoginForm(false)}
-              />
-              <h5 className="text-center font-bold mb-3 text-lg">Login</h5>
-              <hr />
-              <div className="mb-3 mt-5">
-                <p className="text-sm ">UserID</p>
-                <input
-                  type="text"
-                  className="border border-gray-500 rounded-md p-1 my-1 text-sm focus:outline-none"
-                  {...register("userId", { required: "Vui lòng nhập userId" })}
-                />
-                {errors.userId && <p className="text-red text-xs h-2">{errors.userId.message}</p>}
-              </div>
-              <div className="mb-4">
-                <p className="text-sm ">Password</p>
-                <input
-                  type="password"
-                  className="border border-gray-500 rounded-md p-1 my-1 text-sm focus:outline-none"
-                  {...register("password", rules.password)}
-                />
-                {errors.password ? (
-                  <p className="text-red text-xs h-2">{errors.password.message}</p>
-                ) : (
-                  <p className="h-2"></p>
-                )}
-              </div>
-              <button type="submit" className="block bg-primary text-white text-center rounded-md p-2 font-medium mb-1">
-                <p>Login</p>
-              </button>
-              <Link to="/register">
-                <button className="block border-2 border-pink text-pink text-center rounded-md p-2 font-medium w-full">
-                  <p className="">Register</p>
-                </button>
-              </Link>
-            </form>
-          </div>
-        </div>
-      ) : (
-        // Hiển thị form login trên màn hình nhỏ
         <div className="login-page-container flex justify-center items-center bg-primary min-h-screen">
           <div className="w-[90%] login-containe">
           <div className="text-center mb-4 ">
-            <img src="/image/logo.svg" alt="Project X Logo" className="mx-auto w-full h-auto" />
+            <img src="/image/logo.svg" alt="Project X Logo" className="mx-auto w-[70%]  h-auto" />
             <p className="text-gray-500 mb-[10vh] text-2xl text-white">take tests your way</p>
           </div>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -125,7 +78,7 @@ export const LoginPage = ({ isOpenLoginForm, setIsOpenLoginForm }) => {
                 <p className="text-3xl text-white  text-center">UserID</p>
                 <input
                   type="text"
-                  className="rounded-md p-1 my-1 h-[5vh] text-sm focus:outline-none w-full"
+                  className="rounded-md p-1 my-1 h-[7vh] text-lg focus:outline-none w-full"
                   {...register("userId", { required: "Vui lòng nhập userId" })}
                 />
                 {errors.userId && <p className="text-red text-xs h-2">{errors.userId.message}</p>}
@@ -134,7 +87,7 @@ export const LoginPage = ({ isOpenLoginForm, setIsOpenLoginForm }) => {
                 <p className="text-3xl text-white  text-center">Password</p>
                 <input
                   type="password"
-                  className="rounded-md p-1 my-1 h-[5vh] text-sm focus:outline-none w-full"
+                  className="rounded-md p-1 my-1 h-[7vh] text-lg focus:outline-none w-full"
                   {...register("password", rules.password)}
                 />
                 {errors.password ? (
@@ -154,7 +107,6 @@ export const LoginPage = ({ isOpenLoginForm, setIsOpenLoginForm }) => {
             </form>
           </div>
         </div>
-      )}
     </>
   );
   

@@ -46,10 +46,6 @@ export const ExamPage = () => {
 
   return (
     <div className="list-exam-container">
-      <div className="exam-header">
-        <h1>DANH SÁCH CÁC BÀI TESTS</h1>
-      </div>
-      
       <div className="exam-content">
         <div className="project-info">
           <div className="text-center mb-4">
