@@ -7,7 +7,7 @@ const examSchema = new mongoose.Schema(
 		questionIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question', required: true }],
 		durationMinutes: { type: Number, required: true },
 		className: { type: String },
-		createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Account', required: true },
+		user: { type: mongoose.Schema.Types.ObjectId, ref: 'Account', required: true },
 		startAt: { type: Date },
 		endAt: { type: Date },
 	},

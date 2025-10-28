@@ -31,7 +31,7 @@ const login = asyncHandler(async (req, res) => {
     }
 });
 const register = asyncHandler(async (req, res) => {
-    let { userId, password, role, name, dob } = req.body;
+    let { userId, password, role, name, dob, class: className } = req.body;
 
     if (!userId) {
         res.status(400);
@@ -46,7 +46,7 @@ const register = asyncHandler(async (req, res) => {
         throw new Error('Tên đăng nhập đã tồn tại');
     }
 
-    const account = await Account.create({ userId, password, role, name, dob });
+    const account = await Account.create({ userId, password, role, name, dob, class: className });
 
     res.status(201).json({
         status: 'success',

@@ -23,33 +23,37 @@ const CreateTests = () => {
     const [items, setItems] = useState([]); // form-like items
     const [selectedParts, setSelectedParts] = useState({ reading: false, listening: false, writing: false });
     const [selectedItems, setSelectedItems] = useState(new Set()); // track which items are selected for exam
+    const [isCreating, setIsCreating] = useState(false); // loading state for exam creation
 
-    const optionLabels = useMemo(()=> ['A','B','C','D','E','F'],[]);
+    const optionLabels = useMemo(()=> ['A','B','C','D'],[]);
 
     const classes = useSelector((s)=> s.classes.items);
     useEffect(()=>{ dispatch(listMyQuestions()); dispatch(listClasses()); },[dispatch]);
 
     // Generate template rows based on selected parts
     const generateTemplate = async () => {
+        const READING_MAX = 32;
+        const LISTENING_MAX = 25;
+        let useReading = selectedParts.reading;
+        let useListening = selectedParts.listening;
         if (templateType === 'final') {
-            // Final test: all 3 parts mandatory
-            setSelectedParts({ reading: true, listening: true, writing: true });
+            useReading = true;
+            useListening = true;
+            setSelectedParts({ reading: true, listening: true, writing: false });
         }
-        const total = 100; // 100 questions total (adjustable per part)
         const rows = [];
-        for (let i=0;i<total;i++) {
-            const part = i < 33 ? 'reading' : i < 66 ? 'listening' : 'writing';
-            rows.push({
-                part,
-                type: 'select',
-                optionCount: 4,
-                correctOption: 'A',
-                correctOptions: [],
-                correctText: ''
-            });
+        if (useReading) {
+            for (let i = 0; i < READING_MAX; i++) {
+                rows.push({ part: 'reading', type: 'select', optionCount: 4, correctOption: 'A', correctOptions: [], correctText: '' });
+            }
+        }
+        if (useListening) {
+            for (let i = 0; i < LISTENING_MAX; i++) {
+                rows.push({ part: 'listening', type: 'select', optionCount: 4, correctOption: 'A', correctOptions: [], correctText: '' });
+            }
         }
         setItems(rows);
-        toast.success(`Đã tạo mẫu ${total} câu cho ${templateType === 'final' ? 'Final test (3 phần)' : 'Mini test'}`);
+        toast.success(`Đã tạo mẫu ${rows.length} câu (${useReading ? `Reading ${READING_MAX}`: ''}${useReading && useListening ? ' + ' : ''}${useListening ? `Listening ${LISTENING_MAX}`: ''})`);
     };
 
     const toggleSelect = (id) => {
@@ -58,13 +62,15 @@ const CreateTests = () => {
 
     const createExamSubmit = async (e) => {
         e.preventDefault();
-        // Build questions from selected items only
-        const createdIds = [];
-        const filteredItems = items.filter((_, idx) => selectedItems.has(idx));
-        if (filteredItems.length === 0) {
-            toast.error('Chọn ít nhất một câu để tạo đề');
-            return;
-        }
+        setIsCreating(true);
+        try {
+            // Build questions from selected items only
+            const createdIds = [];
+            const filteredItems = items.filter((_, idx) => selectedItems.has(idx));
+            if (filteredItems.length === 0) {
+                toast.error('Chọn ít nhất một câu để tạo đề');
+                return;
+            }
         for (const it of filteredItems) {
             let payloadQ = { text: '', type: it.type };
             if (it.type === 'select') {
@@ -85,19 +91,28 @@ const CreateTests = () => {
                 return;
             }
         }
-        const payload = { name: examName, description: '', questionIds: createdIds, durationMinutes: Number(duration), maxScore: 100 };
+        const payload = { name: examName, description: '', questionIds: createdIds, durationMinutes: Number(duration) };
+        // Calculate max score based on actual selected questions' parts (100 points per part)
+        const selectedPartsFromQuestions = new Set(filteredItems.map(item => item.part));
+        const maxScore = selectedPartsFromQuestions.size * 100;
+        if (maxScore > 0) payload.maxScore = maxScore;
         if (startAt) payload.startAt = new Date(startAt);
         if (endAt) payload.endAt = new Date(endAt);
         if (className) payload.className = className;
         const res = await dispatch(createExam(payload));
         if (res.type.endsWith('fulfilled')) {
-            toast.success(`Tạo đề thi thành công với ${filteredItems.length} câu (điểm tối đa: 100)`);
+            toast.success(`Tạo đề thi thành công với ${filteredItems.length} câu (điểm tối đa: ${maxScore})`);
         } else {
             toast.error('Tạo đề thi thất bại');
         }
-        setExamName(''); setDuration(30); setSelectedIds([]); setItems([]); setSelectedItems(new Set());
-        setStartAt(''); setEndAt('');
-        setClassName('');
+            setExamName(''); setDuration(30); setSelectedIds([]); setItems([]); setSelectedItems(new Set());
+            setStartAt(''); setEndAt('');
+            setClassName('');
+        } catch (error) {
+            toast.error('Có lỗi xảy ra khi tạo đề thi');
+        } finally {
+            setIsCreating(false);
+        }
     };
 
     return (
@@ -197,8 +212,8 @@ const CreateTests = () => {
                                         {it.type !== 'input' && (
                                             <div className="flex items-center gap-3 mb-2">
                                                 <label>Số đáp án:</label>
-                                                <input type="number" min={2} max={6} className="w-20 text-black p-1 rounded" value={it.optionCount} onChange={(e)=>{
-                                                    let n = parseInt(e.target.value||'4',10); if (n<2) n=2; if (n>6) n=6;
+                                                <input type="number" min={2} max={4} className="w-20 text-black p-1 rounded" value={it.optionCount} onChange={(e)=>{
+                                                    let n = parseInt(e.target.value||'4',10); if (n<2) n=2; if (n>4) n=4;
                                                     setItems((arr)=> arr.map((x,i)=> i===idx? { ...x, optionCount:n, correctOption:'A', correctOptions:[] }: x));
                                                 }} />
                                             </div>
@@ -240,7 +255,17 @@ const CreateTests = () => {
                 </div>
 
                 <div className="mt-8">
-                    <button type="submit" form="examForm" className="bg-pink rounded px-4 py-2">Tạo đề thi</button>
+                    <button 
+                        type="submit" 
+                        form="examForm" 
+                        className="bg-pink rounded px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2" 
+                        disabled={isCreating}
+                    >
+                        {isCreating && (
+                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        )}
+                        {isCreating ? 'Đang tạo đề thi...' : 'Tạo đề thi'}
+                    </button>
                 </div>
             </div>
         </div>

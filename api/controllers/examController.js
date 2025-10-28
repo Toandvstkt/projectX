@@ -7,20 +7,20 @@ const ExamAttempt = require('../models/examAttemptModel');
 const createExam = asyncHandler(async (req, res) => {
     const { name, description, questionIds, durationMinutes, startAt, endAt, className } = req.body;
     const createdBy = req.account._id;
-    const exam = await Exam.create({ name, description, questionIds, durationMinutes, startAt, endAt, className, createdBy });
+    const exam = await Exam.create({ name, description, questionIds, durationMinutes, startAt, endAt, className, user: createdBy });
     res.status(201).json({ status: 'success', data: { exam } });
 });
 
 // List own exams
 const listMyExams = asyncHandler(async (req, res) => {
-    const exams = await Exam.find({ createdBy: req.account._id }).sort('-createdAt');
+    const exams = await Exam.find({ user: req.account._id }).sort('-createdAt');
     res.status(200).json({ status: 'success', data: { exams } });
 });
 
 module.exports = { createExam, listMyExams };
 // Get exam by id (own)
 const getExamById = asyncHandler(async (req, res) => {
-    const exam = await Exam.findOne({ _id: req.params.id, createdBy: req.account._id }).populate('questionIds');
+    const exam = await Exam.findOne({ _id: req.params.id, user: req.account._id }).populate('questionIds');
     if (!exam) {
         res.status(404);
         throw new Error('Exam not found');
@@ -30,16 +30,16 @@ const getExamById = asyncHandler(async (req, res) => {
 
 module.exports = { createExam, listMyExams, getExamById };
 const updateExam = asyncHandler(async (req, res) => {
-    const exam = await Exam.findOne({ _id: req.params.id, createdBy: req.account._id });
+    const exam = await Exam.findOne({ _id: req.params.id, user: req.account._id });
     if (!exam) { res.status(404); throw new Error('Exam not found'); }
-    const allowed = ['name','description','questionIds','durationMinutes','startAt','endAt'];
+    const allowed = ['name','description','questionIds','durationMinutes','startAt','endAt','className'];
     allowed.forEach((k)=>{ if (req.body[k] !== undefined) exam[k] = req.body[k]; });
     await exam.save();
     res.status(200).json({ status:'success', data:{ exam } });
 });
 
 const deleteExam = asyncHandler(async (req, res) => {
-    const exam = await Exam.findOneAndDelete({ _id: req.params.id, createdBy: req.account._id });
+    const exam = await Exam.findOneAndDelete({ _id: req.params.id, user: req.account._id });
     if (!exam) { res.status(404); throw new Error('Exam not found'); }
     res.status(204).json({ status:'success', data:null });
 });
@@ -55,10 +55,13 @@ const listPublicExams = asyncHandler(async (req, res) => {
         ]
     };
 
-    // Optional class filter via query param ?className=
-    if (req.query.className) {
-        match.className = req.query.className;
+    // Filter by student's class
+    const studentClass = req.account.class;
+    console.log('Student class:', studentClass);
+    if (studentClass) {
+        match.className = studentClass;
     }
+    console.log('Match query:', match);
 
     const exams = await Exam.find(match).select('name durationMinutes createdAt startAt endAt className');
     res.status(200).json({ status: 'success', data: { exams } });
