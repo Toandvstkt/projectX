@@ -13,5 +13,5 @@ router.route('/register').post(register);
 router
 	.route('/information')
 	.get(protect, getAccountInformation);
-router.route('/').get(getAllAccounts);
+router.route('/').get(protect, restrict('Giáo viên'), getAllAccounts);
 module.exports = router;

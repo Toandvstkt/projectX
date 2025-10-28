@@ -41,8 +41,6 @@ const register = asyncHandler(async (req, res) => {
     userId = userId.toLowerCase();
 
     const accountExistsByUsername = await Account.findOne({ userId });
-	await Account.deleteMany({ userId: { $exists: false } });
-	console.log("Đã xóa tất cả tài khoản không có userId!");
     if (accountExistsByUsername) {
         res.status(400);
         throw new Error('Tên đăng nhập đã tồn tại');

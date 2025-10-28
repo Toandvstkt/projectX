@@ -18,7 +18,11 @@ app.use(bodyParser.json());
 
 const server = http.createServer(app);
 
-app.use('/projectX/api/accounts', require('./routes/accountRoutes'));	
+app.use('/projectX/api/accounts', require('./routes/accountRoutes'));
+app.use('/projectX/api/questions', require('./routes/questionRoutes'));
+app.use('/projectX/api/exams', require('./routes/examRoutes'));
+app.use('/projectX/api/classes', require('./routes/classRoutes'));
+app.use('/projectX/api/attempts', require('./routes/attemptRoutes'));
 
 app.use(express.static(path.join(__dir, '/client/dist')));
 

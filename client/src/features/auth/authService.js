@@ -1,36 +1,48 @@
 import axios from 'axios';
 
-const API_URL = '/projectx/api/accounts/';
+// Create axios instance with correct base URL (case-sensitive)
+const api = axios.create({ baseURL: '/projectX/api' });
+
+// Attach Authorization header if token exists
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers = config.headers || {};
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
 
 const login = async (accountData) => {
-	const response = await axios.post(API_URL + 'login', accountData);
-  
-	if (response.data && response.data.data && response.data.data.account) {
-	  localStorage.setItem('account', JSON.stringify(response.data.data.account));
-	  return response.data.data.account;
-	} else {
-	  throw new Error('Dữ liệu tài khoản không hợp lệ');
-	}
-  };
-
-const register = async (accountData) => {
-	const response = await axios.post(API_URL + 'register', accountData);
-	return response.data.data.account;
+    const response = await api.post('/accounts/login', accountData);
+    const payload = response.data && response.data.data;
+    if (payload && payload.account && payload.token) {
+        localStorage.setItem('account', JSON.stringify(payload.account));
+        localStorage.setItem('token', payload.token);
+        return payload.account;
+    }
+    throw new Error('Dữ liệu tài khoản không hợp lệ');
 };
 
-const getAllAccounts = async (token) => {
-	const response = await axios.get(API_URL);
-	return response.data.data.accounts;
+const register = async (accountData) => {
+    const response = await api.post('/accounts/register', accountData);
+    return response.data.data.account;
+};
+
+const getAllAccounts = async () => {
+    const response = await api.get('/accounts');
+    return response.data.data.accounts;
+};
+
+const getInformation = async () => {
+    const response = await api.get('/accounts/information');
+    return response.data.data.account;
 };
 
 const logout = async () => {
-	localStorage.removeItem('account');
-};
-const authService = {
-	login,
-	logout,
-	register,
-	getAllAccounts,
+    localStorage.removeItem('account');
+    localStorage.removeItem('token');
 };
 
+const authService = { login, logout, register, getAllAccounts, getInformation };
 export default authService;

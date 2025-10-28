@@ -8,9 +8,12 @@ import { Spinner } from "../../components";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { errorStyle } from "../../utils/toast-customize";
+import { useDispatch as useReduxDispatch, useSelector as useReduxSelector } from 'react-redux';
+import { listClasses } from '../../features/classes/classesSlice';
 
 export const RegisterPage = ({ setIsOpenRegisterForm }) => {
   const dispatch = useDispatch();
+  const classesState = useSelector((s)=> s.classes);
   const navigate = useNavigate();
   const { isLoading, isError, isSuccess, message } = useSelector((state) => state.auth);
   const [isPC, setIsPC] = useState(window.innerWidth > 768);
@@ -37,6 +40,7 @@ export const RegisterPage = ({ setIsOpenRegisterForm }) => {
   };
 
   useEffect(() => {
+    dispatch(listClasses());
     if (isError) {
       toast.error(message, errorStyle);
     }
@@ -75,9 +79,14 @@ export const RegisterPage = ({ setIsOpenRegisterForm }) => {
             </div>
             <div className="mb-3 mt-5">
               <p className="text-3xl text-white text-center">Class</p>
-              <input type="text" className="rounded-md p-1 my-1 h-[7vh] text-lg focus:outline-none w-full" 
-                {...register("class", { required: "Please enter your class" })}
-              />
+              <select className="rounded-md p-1 my-1 h-[7vh] text-lg focus:outline-none w-full text-black" 
+                {...register("class", { required: "Please select your class" })}
+              >
+                <option value="">-- Select class --</option>
+                {classesState.items.map((c)=> (
+                  <option key={c._id} value={c.name}>{c.name}</option>
+                ))}
+              </select>
               {errors.class && <p className="text-red text-xs h-2">{errors.class.message}</p>}
             </div>
             <div className="mb-3 mt-5">
@@ -99,7 +108,7 @@ export const RegisterPage = ({ setIsOpenRegisterForm }) => {
               {errors.password && <p className="text-red text-xs h-2">{errors.password.message}</p>}
             </div>
             <button type="submit" className="block bg-pink text-white text-center rounded-md p-2 font-medium mb-1">
-              <p class="text-2xl">Register</p>
+              <p className="text-2xl">Register</p>
             </button>
             <Link to="/login"><p className="text-center text-sm">Đã có tài khoản? Đăng nhập</p></Link>
           </form>

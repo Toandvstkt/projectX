@@ -36,7 +36,12 @@ export const LoginPage = ({ isOpenLoginForm, setIsOpenLoginForm }) => {
 
       if (response.type.endsWith('fulfilled')) {
         toast.success('Đăng nhập thành công!');
-        navigate('/home');
+        const user = JSON.parse(localStorage.getItem('account') || '{}');
+        if (user && user.role === 'Giáo viên') {
+          navigate('/teacher');
+        } else {
+          navigate('/home');
+        }
       } else {
         toast.error('Sai thông tin đăng nhập!');
       }
@@ -54,10 +59,9 @@ export const LoginPage = ({ isOpenLoginForm, setIsOpenLoginForm }) => {
   }, []);
 
   useEffect(() => {
-    if (isError && message == "tài khoản hoặc mật khẩu không đúng") {
+    if (isError && message === "Tên đăng nhập hoặc mật khẩu không đúng") {
       toast.error(message, errorStyle);
     }
-
     dispatch(reset());
   }, [account, isError, isSuccess, message, navigate, dispatch]);
 
@@ -97,7 +101,7 @@ export const LoginPage = ({ isOpenLoginForm, setIsOpenLoginForm }) => {
                 )}
               </div>
               <button type="submit" className="block bg-pink text-white text-center rounded-md p-2 font-medium mb-1">
-                <p class="text-2xl">Login</p>
+                <p className="text-2xl">Login</p>
               </button>
               <Link to="/register">
                 <button className="block border-2 border-pink text-pink text-center rounded-md p-2 font-medium w-full">

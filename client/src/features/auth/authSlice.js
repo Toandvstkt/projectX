@@ -25,6 +25,20 @@ export const logout = createAsyncThunk('auth/logout', async () => {
 	await authService.logout();
 });
 
+export const hydrate = createAsyncThunk('auth/hydrate', async (_, thunkAPI) => {
+    try {
+        return await authService.getInformation();
+    } catch (error) {
+        const message =
+            (error.response &&
+                error.response.data &&
+                error.response.data.message) ||
+            error.message ||
+            error.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+});
+
 export const register = createAsyncThunk(
 	'auth/register',
 	async (accountData, thunkAPI) => {
@@ -102,6 +116,20 @@ export const authSlice = createSlice({
 			.addCase(logout.fulfilled, (state) => {
 				state.account = null;
 			})
+            .addCase(hydrate.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(hydrate.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.account = action.payload;
+            })
+            .addCase(hydrate.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+                state.account = null;
+            })
 			.addCase(register.pending, (state) => {
 				state.isLoading = true;
 			})
