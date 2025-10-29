@@ -10,6 +10,7 @@ const examSchema = new mongoose.Schema(
 		user: { type: mongoose.Schema.Types.ObjectId, ref: 'Account', required: true },
 		startAt: { type: Date },
 		endAt: { type: Date },
+		allowRetake: { type: Boolean, default: false }, // Cho phép làm lại bài thi
 	},
 	{ timestamps: true }
 );

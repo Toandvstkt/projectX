@@ -1,15 +1,17 @@
-import { Outlet } from "react-router-dom";
-// import { Footer, Header } from "../components";
+import { Outlet, useLocation } from "react-router-dom";
 import { ToastBar, Toaster } from "react-hot-toast";
+import StudentNav from "../components/StudentNav";
 
 export const Layout = () => {
+	const location = useLocation();
+	const isStudentPage = location.pathname.startsWith('/exams') || location.pathname.startsWith('/history');
+	
 	return (
 		<div className="flex flex-col min-h-screen">
-			{/* <Header /> */}
+			{isStudentPage && <StudentNav />}
 			<div className="flex-grow">
 				<Outlet />
 			</div>
-			{/* <Footer /> */}
 			<Toaster>
 				{(t) => (
 					<ToastBar

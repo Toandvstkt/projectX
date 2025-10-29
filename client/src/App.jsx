@@ -16,7 +16,10 @@ import TeacherExamDetail from './pages/TeacherPage/TeacherExamDetail';
 import StudentExamsList from './pages/StudentPage/StudentExamsList';
 import TakeExam from './pages/StudentPage/TakeExam';
 import StudentHistory from './pages/StudentPage/StudentHistory';
+import ExamResultDetail from './pages/StudentPage/ExamResultDetail';
 import MyClasses from './pages/TeacherPage/MyClasses';
+import TeacherScores from './pages/TeacherPage/TeacherScores';
+import TeacherClassList from './pages/TeacherPage/TeacherClassList';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { HomePage } from './pages/HomePage';
@@ -59,9 +62,12 @@ const AppContent = () => {
                     <Route path="/exams" element={<RequireAuth><StudentExamsList /></RequireAuth>} />
                     <Route path="/exams/:id/take" element={<RequireAuth><TakeExam /></RequireAuth>} />
                     <Route path="/history" element={<RequireAuth><StudentHistory /></RequireAuth>} />
+                    <Route path="/exams/attempts/:attemptId" element={<RequireAuth><ExamResultDetail /></RequireAuth>} />
                     <Route path="/teacher" element={<RequireAuth><TeacherPage /></RequireAuth>} />
                     <Route path="/teacher/exams" element={<RequireAuth><TeacherExamsList /></RequireAuth>} />
                     <Route path="/teacher/exams/:id" element={<RequireAuth><TeacherExamDetail /></RequireAuth>} />
+                    <Route path="/teacher/scores" element={<RequireAuth><TeacherClassList /></RequireAuth>} />
+                    <Route path="/teacher/scores/detail" element={<RequireAuth><TeacherScores /></RequireAuth>} />
                     <Route path="/my-classes" element={<RequireAuth><MyClasses /></RequireAuth>} />
                     <Route path="/student" element={<RequireAuth><StudentPage /></RequireAuth>} />
                     <Route path="/create-tests" element={<RequireAuth><CreateTests /></RequireAuth>} />

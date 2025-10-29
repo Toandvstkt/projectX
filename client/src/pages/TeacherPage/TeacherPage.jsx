@@ -6,8 +6,8 @@ import { toast } from 'react-hot-toast';
 
 const StatCard = ({ label, value }) => {
     return (
-        <div className="bg-white/10 rounded-xl p-5 text-center shadow">
-            <div className="text-sm text-white/80 mb-1">{label}</div>
+        <div className="bg-white rounded-xl p-5 text-center shadow text-black">
+            <div className="text-sm text-gray-600 mb-1">{label}</div>
             <div className="text-3xl font-semibold">{value}</div>
         </div>
     );
@@ -43,9 +43,9 @@ const TeacherPage = () => {
                     <StatCard label="Học viên" value={isLoading ? '—' : students} />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     <button
-                        className="bg-pink hover:bg-pink/90 transition rounded-xl p-5 text-left shadow"
+                        className="bg-pink hover:bg-pink/90 transition rounded-xl p-5 text-left shadow text-white"
                         onClick={() => navigate('/create-tests')}
                     >
                         <div className="text-xl font-medium mb-1">Tạo đề thi</div>
@@ -53,19 +53,27 @@ const TeacherPage = () => {
                     </button>
 
                     <button
-                        className="bg-white/10 hover:bg-white/20 transition rounded-xl p-5 text-left shadow"
+                        className="bg-white hover:bg-gray-50 transition rounded-xl p-5 text-left shadow text-black"
                         onClick={() => navigate('/my-classes')}
                     >
                         <div className="text-xl font-medium mb-1">Lớp học của tôi</div>
-                        <div className="text-white/80 text-sm">Quản lý danh sách lớp và học viên</div>
+                        <div className="text-gray-600 text-sm">Quản lý danh sách lớp và học viên</div>
                     </button>
 
                     <button
-                        className="bg-white/10 hover:bg-white/20 transition rounded-xl p-5 text-left shadow"
+                        className="bg-white hover:bg-gray-50 transition rounded-xl p-5 text-left shadow text-black"
                         onClick={() => navigate('/teacher/exams')}
                     >
                         <div className="text-xl font-medium mb-1">Danh sách đề</div>
-                        <div className="text-white/80 text-sm">Xem và quản lý các đề đã tạo</div>
+                        <div className="text-gray-600 text-sm">Xem và quản lý các đề đã tạo</div>
+                    </button>
+
+                    <button
+                        className="bg-white hover:bg-gray-50 transition rounded-xl p-5 text-left shadow text-black"
+                        onClick={() => navigate('/teacher/scores')}
+                    >
+                        <div className="text-xl font-medium mb-1">Xem điểm</div>
+                        <div className="text-gray-600 text-sm">Xem điểm số của học sinh theo lớp</div>
                     </button>
                 </div>
             </div>

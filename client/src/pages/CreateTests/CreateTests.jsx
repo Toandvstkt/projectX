@@ -19,6 +19,7 @@ const CreateTests = () => {
     const [startAt, setStartAt] = useState('');
     const [endAt, setEndAt] = useState('');
     const [className, setClassName] = useState('');
+    const [allowRetake, setAllowRetake] = useState(false);
     const [templateType, setTemplateType] = useState('');
     const [items, setItems] = useState([]); // form-like items
     const [selectedParts, setSelectedParts] = useState({ reading: false, listening: false, writing: false });
@@ -71,43 +72,47 @@ const CreateTests = () => {
                 toast.error('Chọn ít nhất một câu để tạo đề');
                 return;
             }
-        for (const it of filteredItems) {
-            let payloadQ = { text: '', type: it.type };
-            if (it.type === 'select') {
-                payloadQ.options = optionLabels.slice(0, it.optionCount).map(l=>({ label:l, text:l }));
-                payloadQ.correctOption = it.correctOption || 'A';
-            } else if (it.type === 'checkbox') {
-                payloadQ.options = optionLabels.slice(0, it.optionCount).map(l=>({ label:l, text:l }));
-                payloadQ.correctOptions = it.correctOptions && it.correctOptions.length ? it.correctOptions : ['A'];
-            } else if (it.type === 'input') {
-                payloadQ.correctText = it.correctText || '';
+            for (const it of filteredItems) {
+                let payloadQ = { text: '', type: it.type };
+                if (it.type === 'select') {
+                    payloadQ.options = optionLabels.slice(0, it.optionCount).map(l=>({ label:l, text:l }));
+                    payloadQ.correctOption = it.correctOption || 'A';
+                } else if (it.type === 'checkbox') {
+                    payloadQ.options = optionLabels.slice(0, it.optionCount).map(l=>({ label:l, text:l }));
+                    payloadQ.correctOptions = it.correctOptions && it.correctOptions.length ? it.correctOptions : ['A'];
+                } else if (it.type === 'input') {
+                    payloadQ.correctText = it.correctText || '';
+                }
+                const res = await dispatch(createQuestion(payloadQ));
+                if (res.type.endsWith('fulfilled')) {
+                    const q = res.payload;
+                    createdIds.push(q._id || q?.id || q?.question?._id);
+                } else {
+                    toast.error('Tạo câu trả lời thất bại ở một mục');
+                    return;
+                }
             }
-            const res = await dispatch(createQuestion(payloadQ));
+            const payload = { name: examName, description: '', questionIds: createdIds, durationMinutes: Number(duration) };
+            // Calculate max score based on actual selected questions' parts (100 points per part)
+            const selectedPartsFromQuestions = new Set(filteredItems.map(item => item.part));
+            const maxScore = selectedPartsFromQuestions.size * 100;
+            if (maxScore > 0) payload.maxScore = maxScore;
+            if (startAt) payload.startAt = new Date(startAt);
+            if (endAt) payload.endAt = new Date(endAt);
+            if (className) payload.className = className;
+            payload.allowRetake = allowRetake;
+            console.log('=== FRONTEND CREATE EXAM ===');
+            console.log('Payload:', payload);
+            console.log('Question IDs:', createdIds);
+            const res = await dispatch(createExam(payload));
             if (res.type.endsWith('fulfilled')) {
-                const q = res.payload;
-                createdIds.push(q._id || q?.id || q?.question?._id);
+                toast.success(`Tạo đề thi thành công với ${filteredItems.length} câu (điểm tối đa: ${maxScore})`);
             } else {
-                toast.error('Tạo câu trả lời thất bại ở một mục');
-                return;
+                toast.error('Tạo đề thi thất bại');
             }
-        }
-        const payload = { name: examName, description: '', questionIds: createdIds, durationMinutes: Number(duration) };
-        // Calculate max score based on actual selected questions' parts (100 points per part)
-        const selectedPartsFromQuestions = new Set(filteredItems.map(item => item.part));
-        const maxScore = selectedPartsFromQuestions.size * 100;
-        if (maxScore > 0) payload.maxScore = maxScore;
-        if (startAt) payload.startAt = new Date(startAt);
-        if (endAt) payload.endAt = new Date(endAt);
-        if (className) payload.className = className;
-        const res = await dispatch(createExam(payload));
-        if (res.type.endsWith('fulfilled')) {
-            toast.success(`Tạo đề thi thành công với ${filteredItems.length} câu (điểm tối đa: ${maxScore})`);
-        } else {
-            toast.error('Tạo đề thi thất bại');
-        }
             setExamName(''); setDuration(30); setSelectedIds([]); setItems([]); setSelectedItems(new Set());
             setStartAt(''); setEndAt('');
-            setClassName('');
+            setClassName(''); setAllowRetake(false);
         } catch (error) {
             toast.error('Có lỗi xảy ra khi tạo đề thi');
         } finally {
@@ -139,6 +144,17 @@ const CreateTests = () => {
                                     <option value="">-- Select class --</option>
                                     {classes.map((c)=> <option key={c._id} value={c.name}>{c.name}</option>)}
                                 </select>
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="flex items-center gap-2">
+                                    <input 
+                                        type="checkbox" 
+                                        checked={allowRetake} 
+                                        onChange={(e)=>setAllowRetake(e.target.checked)}
+                                        className="w-4 h-4"
+                                    />
+                                    <span>Cho phép học sinh làm lại bài thi</span>
+                                </label>
                             </div>
                         </div>
                     </form>

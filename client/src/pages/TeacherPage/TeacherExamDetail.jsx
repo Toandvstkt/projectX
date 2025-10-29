@@ -23,7 +23,7 @@ const TeacherExamDetail = () => {
                 <div className="space-y-4">
                     {current.questionIds.map((q, idx)=> (
                         <div key={q._id || idx} className="bg-white/10 rounded p-4">
-                            <div className="font-medium mb-2">{idx+1}. {q.text}</div>
+                            <div className="font-medium mb-2">{idx+1}. {q.text || `Câu hỏi ${idx+1}`}</div>
                             <ul className="list-disc list-inside text-white/90">
                                 {q.options?.map((op)=> (
                                     <li key={op.label} className={q.correctOption === op.label ? 'text-green-300' : ''}>

@@ -3,6 +3,7 @@ import authReducer from './../features/auth/authSlice';
 import questionsReducer from './../features/questions/questionsSlice';
 import examsReducer from './../features/exams/examsSlice';
 import attemptsReducer from './../features/exams/attemptsSlice';
+import historyReducer from './../features/exams/historySlice';
 import classesReducer from './../features/classes/classesSlice';
 
 export const store = configureStore({
@@ -11,6 +12,7 @@ export const store = configureStore({
 		questions: questionsReducer,
 		exams: examsReducer,
 		attempts: attemptsReducer,
+		history: historyReducer,
 		classes: classesReducer,
 	},
 });

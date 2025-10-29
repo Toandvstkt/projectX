@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getExamForTaking, submitExam } from '../../features/exams/examsSlice';
+import { getExamHistory } from '../../features/exams/historySlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
@@ -8,7 +9,8 @@ const TakeExam = () => {
     const { id } = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { current, isLoading, attempt } = useSelector((s)=>s.exams);
+    const { current, isLoading } = useSelector((s)=>s.exams);
+    const { currentAttempt } = useSelector((s)=>s.history);
     const [answers, setAnswers] = useState({});
     const [remaining, setRemaining] = useState(null);
     const [submitting, setSubmitting] = useState(false);
@@ -51,22 +53,34 @@ const TakeExam = () => {
         setAnswers((a)=> ({ ...a, [qid]: opt }));
     };
 
-    // Persist answers on change
+    // Persist answers on change with debounce
     useEffect(()=>{
-        localStorage.setItem(`exam_answers_${id}`, JSON.stringify(answers));
+        const timeoutId = setTimeout(() => {
+            localStorage.setItem(`exam_answers_${id}`, JSON.stringify(answers));
+        }, 500); // Debounce 500ms
+        return () => clearTimeout(timeoutId);
     }, [answers, id]);
 
     const handleSubmit = () => {
-        if (submitting || attempt) return;
+        if (submitting || currentAttempt) return;
         const confirmed = window.confirm('Bạn có chắc chắn muốn nộp bài? Sau khi nộp không thể sửa lại.');
         if (!confirmed) return;
         setSubmitting(true);
         const payload = Object.entries(answers).map(([questionId, selectedOption])=> ({ questionId, selectedOption }));
-        dispatch(submitExam({ id, answers: payload })).finally(()=> {
+        dispatch(submitExam({ id, answers: payload })).then((result) => {
+            if (result.type.endsWith('fulfilled')) {
+                toast.success('Nộp bài thành công!');
+                // Clear persisted data after submit
+                localStorage.removeItem(`exam_answers_${id}`);
+                localStorage.removeItem(`exam_remaining_${id}`);
+                // Navigate immediately
+                navigate('/history');
+            } else {
+                const msg = result?.payload?.message || result?.payload || 'Nộp bài thất bại';
+                toast.error(msg);
+            }
+        }).finally(()=> {
             setSubmitting(false);
-            // Clear persisted data after submit
-            localStorage.removeItem(`exam_answers_${id}`);
-            localStorage.removeItem(`exam_remaining_${id}`);
         });
     };
 
@@ -80,24 +94,24 @@ const TakeExam = () => {
     useEffect(()=>{
         const onBeforeUnload = (e) => {
             unloadingRef.current = true;
-            if (!attempt) {
+            if (!currentAttempt) {
                 e.preventDefault();
                 e.returnValue = '';
             }
         };
         window.addEventListener('beforeunload', onBeforeUnload);
         return ()=> window.removeEventListener('beforeunload', onBeforeUnload);
-    }, [attempt]);
+    }, [currentAttempt]);
 
     // Clear draft answers when navigating away (SPA route change), but keep on reload/close
     useEffect(()=>{
         return () => {
-            if (!attempt && !unloadingRef.current) {
+            if (!currentAttempt && !unloadingRef.current) {
                 localStorage.removeItem(`exam_answers_${id}`);
                 localStorage.removeItem(`exam_remaining_${id}`);
             }
         };
-    }, [attempt, id]);
+    }, [currentAttempt, id]);
 
     if (isLoading || !current) return <div className="min-h-screen bg-primary text-white flex items-center justify-center">Loading...</div>;
 
@@ -109,7 +123,7 @@ const TakeExam = () => {
                         <button 
                             className="bg-white/10 hover:bg-white/20 rounded px-3 py-1" 
                             onClick={() => {
-                                if (attempt) {
+                                if (currentAttempt) {
                                     navigate(-1);
                                 } else {
                                     const confirmed = window.confirm('Bạn có chắc chắn muốn thoát? Tiến trình làm bài sẽ được lưu tạm thời.');
@@ -129,8 +143,8 @@ const TakeExam = () => {
                             <div className="font-medium mb-2">{idx+1}. {q.text || `Câu hỏi ${idx+1}`}</div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                 {q.options?.map((op)=> (
-                                    <label key={op.label} className={`cursor-pointer p-2 rounded border ${answers[q._id]===op.label?'bg-white/20':'border-white/20'} ${attempt ? 'opacity-60 pointer-events-none' : ''}`}>
-                                        <input type="radio" name={q._id} className="mr-2" checked={answers[q._id]===op.label} onChange={()=>handleSelect(q._id, op.label)} disabled={!!attempt} />
+                                    <label key={op.label} className={`cursor-pointer p-2 rounded border ${answers[q._id]===op.label?'bg-white/20':'border-white/20'} ${currentAttempt ? 'opacity-60 pointer-events-none' : ''}`}>
+                                        <input type="radio" name={q._id} className="mr-2" checked={answers[q._id]===op.label} onChange={()=>handleSelect(q._id, op.label)} disabled={!!currentAttempt} />
                                         {op.label}. {op.text}
                                     </label>
                                 ))}
@@ -138,12 +152,12 @@ const TakeExam = () => {
                         </div>
                     ))}
                 </div>
-                {!attempt && <button className="bg-pink rounded px-4 py-2 disabled:opacity-60" onClick={handleSubmit} disabled={submitting}>Nộp bài</button>}
-                {attempt && (
+                {!currentAttempt && <button className="bg-pink rounded px-4 py-2 disabled:opacity-60" onClick={handleSubmit} disabled={submitting}>Nộp bài</button>}
+                {currentAttempt && (
                     <div className="mt-4 bg-white/10 rounded p-4">
                         <div className="text-xl">Bạn đã nộp bài.</div>
-                        <div className="text-white/80">Điểm: {attempt.score} / {attempt.totalQuestions}</div>
-                        <div className="text-white/80">Số câu đúng: {attempt.correctCount}</div>
+                        <div className="text-white/80">Điểm: {currentAttempt.score} / {currentAttempt.totalQuestions}</div>
+                        <div className="text-white/80">Số câu đúng: {currentAttempt.correctCount}</div>
                     </div>
                 )}
             </div>
