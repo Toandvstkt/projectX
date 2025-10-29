@@ -58,6 +58,8 @@ const TakeExam = () => {
 
     const handleSubmit = () => {
         if (submitting || attempt) return;
+        const confirmed = window.confirm('Bạn có chắc chắn muốn nộp bài? Sau khi nộp không thể sửa lại.');
+        if (!confirmed) return;
         setSubmitting(true);
         const payload = Object.entries(answers).map(([questionId, selectedOption])=> ({ questionId, selectedOption }));
         dispatch(submitExam({ id, answers: payload })).finally(()=> {
@@ -103,13 +105,28 @@ const TakeExam = () => {
         <div className="min-h-screen bg-primary text-white">
             <div className="max-w-4xl mx-auto px-5 py-10">
                 <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-2xl font-semibold">{current.name}</h1>
+                    <div className="flex items-center gap-4">
+                        <button 
+                            className="bg-white/10 hover:bg-white/20 rounded px-3 py-1" 
+                            onClick={() => {
+                                if (attempt) {
+                                    navigate(-1);
+                                } else {
+                                    const confirmed = window.confirm('Bạn có chắc chắn muốn thoát? Tiến trình làm bài sẽ được lưu tạm thời.');
+                                    if (confirmed) navigate(-1);
+                                }
+                            }}
+                        >
+                            ← Quay lại
+                        </button>
+                        <h1 className="text-2xl font-semibold">{current.name}</h1>
+                    </div>
                     <div className="bg-white/10 rounded px-3 py-1">{mmss}</div>
                 </div>
                 <div className="space-y-4 mb-6">
                     {current.questionIds.map((q, idx)=> (
                         <div key={q._id || idx} className="bg-white/10 rounded p-4">
-                            <div className="font-medium mb-2">{idx+1}. {q.text}</div>
+                            <div className="font-medium mb-2">{idx+1}. {q.text || `Câu hỏi ${idx+1}`}</div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                                 {q.options?.map((op)=> (
                                     <label key={op.label} className={`cursor-pointer p-2 rounded border ${answers[q._id]===op.label?'bg-white/20':'border-white/20'} ${attempt ? 'opacity-60 pointer-events-none' : ''}`}>

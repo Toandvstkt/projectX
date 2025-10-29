@@ -5,8 +5,8 @@ const { createExam, listMyExams, getExamById, updateExam, deleteExam, listPublic
 const router = express.Router();
 
 // Public/student endpoints
-router.get('/public', listPublicExams);
-router.get('/:id/take', getExamForTaking);
+router.get('/public', protect, listPublicExams);
+router.get('/:id/take', protect, getExamForTaking);
 router.post('/:id/submit', protect, submitExam);
 
 // Teacher endpoints

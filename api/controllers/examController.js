@@ -47,6 +47,7 @@ const deleteExam = asyncHandler(async (req, res) => {
 module.exports = { createExam, listMyExams, getExamById, updateExam, deleteExam };
 // Student: list public exams (simplified - all exams)
 const listPublicExams = asyncHandler(async (req, res) => {
+    console.log('=== LIST PUBLIC EXAMS CALLED ===');
     const now = new Date();
     const match = {
         $and: [
@@ -57,6 +58,8 @@ const listPublicExams = asyncHandler(async (req, res) => {
 
     // Filter by student's class
     const studentClass = req.account.class;
+    console.log('=== DEBUG LIST PUBLIC EXAMS ===');
+    console.log('Student account:', req.account);
     console.log('Student class:', studentClass);
     if (studentClass) {
         match.className = studentClass;
@@ -64,6 +67,8 @@ const listPublicExams = asyncHandler(async (req, res) => {
     console.log('Match query:', match);
 
     const exams = await Exam.find(match).select('name durationMinutes createdAt startAt endAt className');
+    console.log('Found exams:', exams.length);
+    console.log('Exams data:', exams);
     res.status(200).json({ status: 'success', data: { exams } });
 });
 
